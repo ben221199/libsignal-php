@@ -1,5 +1,5 @@
 <?php
-namespace WhisperSystems\LibSignal\ECC2;
+namespace WhisperSystems\LibSignal\ECC;
 
 class Curve{
 
