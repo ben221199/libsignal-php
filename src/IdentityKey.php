@@ -1,54 +1,50 @@
 <?php
-namespace Libsignal;
+namespace WhisperSystems\LibSignal;
 
-use Libsignal\ecc\Curve;
-use Libsignal\ecc\ECPublicKey;
+use WhisperSystems\LibSignal\ECC\Curve;
+use WhisperSystems\LibSignal\ECC\ECPublicKey;
 
-class IdentityKey
-{
-    protected $publicKey;    // ECPublicKey
+class IdentityKey{
 
-    public function __construct($publicKeyOrBytes, $offset = null) // [ECPublicKey publicKey]
-    {
-        if ($offset === null) {
+    /**
+     * @var ECPublicKey $publicKey
+     */
+    private $publicKey;
+
+    /**
+     * IdentityKey constructor.
+     * @param ECPublicKey|string $publicKeyOrBytes
+     * @param int|null $offset
+     */
+    public function __construct($publicKeyOrBytes,$offset=null){
+        if($publicKeyOrBytes instanceof ECPublicKey && $offset==null){
             $this->publicKey = $publicKeyOrBytes;
-        } else {
-            $this->publicKey = Curve::decodePoint($publicKeyOrBytes, $offset);
+        }elseif(is_string($publicKeyOrBytes) && is_int($offset)){
+            $this->publicKey = Curve::decodePoint($publicKeyOrBytes,$offset);
         }
     }
 
-    public function getPublicKey()
-    {
+    public function getPublicKey(): ECPublicKey{
         return $this->publicKey;
     }
 
-    public function serialize()
-    {
+    public function serialize(): string{
         return $this->publicKey->serialize();
     }
 
-    public function getFingerprint()
-    {
-        $hex = unpack('H*', $this->publicKey->serialize());
-        $hex = implode(' ', str_split($hex, 2));
-
-        return $hex;
+    public function getFingerprint(): string{
+        return Hex::toString($this->publicKey->serialize());
     }
 
-    public function equals($other) // [Object other]
-    {
-        if (($other == null)) {
-            return  false;
-        }
-        if (!($other instanceof self)) {
-            return  false;
-        }
-
-        return $this->publicKey->equals($other->getPublicKey());
+public function equals($other): bool{
+    if($other===null){
+        return false;
     }
-
-    public function hashCode()
-    {
-        return $this->publicKey->hashCode();
+    if(!($other instanceof IdentityKey)){
+        return false;
     }
+    /**@var IdentityKey $other*/
+    return $this->publicKey->equals($other->getPublicKey());
+}
+
 }
