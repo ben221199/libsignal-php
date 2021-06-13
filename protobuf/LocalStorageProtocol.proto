@@ -1,6 +1,8 @@
-package localstorage;
+syntax = "proto2";
 
-option java_package = "org.whispersystems.libaxolotl.state";
+package textsecure;
+
+option java_package         = "org.whispersystems.libsignal.state";
 option java_outer_classname = "StorageProtos";
 
 message SessionStructure {

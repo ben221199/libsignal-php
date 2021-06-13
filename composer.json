@@ -14,11 +14,8 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"WhisperSystems\\LibSignal\\": "src/",
-
 			"GPBMetadata\\": "src/GPBMetadata/",
-			"Whispertext\\": "src/Whispertext/",
-			"Localstorage\\": "src/Localstorage/"
+			"WhisperSystems\\LibSignal\\": "src/"
 		}
 	},
 	"autoload-dev": {

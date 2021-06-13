@@ -111,6 +111,28 @@ class Curve{
      * @return string
      * @throws InvalidKeyException
      */
+    public static function calculateSignature(ECPrivateKey $signingKey,string $message): string{
+        if($signingKey===null || $message===null){
+            throw new InvalidKeyException("Values must not be null");
+        }
+
+        if ($signingKey->getType()===self::DJB_TYPE){
+            /**@var DjbECPrivateKey $signingKey*/
+            //TODO Improve
+            return (new \deemru\Curve25519)->sign($message,$signingKey->getPrivateKey());
+//            return Curve25519.getInstance(BEST)
+//                .calculateSignature(((DjbECPrivateKey) signingKey).getPrivateKey(), message);
+        }else{
+            throw new InvalidKeyException("Unknown type: " . $signingKey->getType());
+        }
+    }
+
+    /**
+     * @param ECPrivateKey $signingKey
+     * @param string $message
+     * @return string
+     * @throws InvalidKeyException
+     */
     public static function calculateVrfSignature(ECPrivateKey $signingKey,string $message): string{
         if($signingKey===null || $message===null){
             throw new InvalidKeyException("Values must not be null");
@@ -118,7 +140,7 @@ class Curve{
 
         if($signingKey->getType()===self::DJB_TYPE){
             /**@var DjbECPrivateKey $signingKey*/
-            return null;//TODO
+            return '';//TODO
         } else {
             throw new InvalidKeyException("Unknown type: " . $signingKey->getType());
         }
@@ -137,7 +159,7 @@ class Curve{
         }
         if($signingKey->getType()==self::DJB_TYPE){
             /**@var DjbECPublicKey $signingKey*/
-            return null;//TODO
+            return '';//TODO
         }else{
             throw new InvalidKeyException("Unknown type: " . $signingKey->getType());
         }
