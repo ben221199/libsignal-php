@@ -8,6 +8,7 @@ use WhisperSystems\LibSignal\ECC\ECPublicKey;
 use WhisperSystems\LibSignal\KDF\HKDFv3;
 use WhisperSystems\LibSignal\Protocol\CiphertextMessage;
 use WhisperSystems\LibSignal\State\SessionState;
+use WhisperSystems\LibSignal\Util\ByteUtil;
 use WhisperSystems\LibSignal\Util\Guava\Optional;
 
 class RatchetingSession{
