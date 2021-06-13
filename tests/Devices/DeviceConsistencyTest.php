@@ -43,9 +43,9 @@ class DeviceConsistencyTest extends TestCase{
         $receivedDeviceTwoMessage = new DeviceConsistencyMessage($deviceOneCommitment,$deviceTwoMessage->getSerialized(),$deviceTwo->getPublicKey());
         $receivedDeviceThreeMessage = new DeviceConsistencyMessage($deviceOneCommitment,$deviceThreeMessage->getSerialized(),$deviceThree->getPublicKey());
 
-        $this->assertTrue($deviceOneMessage->getSignature()->getVrfOutput(), $receivedDeviceOneMessage->getSignature()->getVrfOutput());
-        $this->assertTrue($deviceTwoMessage->getSignature()->getVrfOutput(), $receivedDeviceTwoMessage->getSignature()->getVrfOutput());
-        $this->assertTrue($deviceThreeMessage->getSignature()->getVrfOutput(), $receivedDeviceThreeMessage->getSignature()->etVrfOutput());
+        $this->assertTrue($deviceOneMessage->getSignature()->getVrfOutput()===$receivedDeviceOneMessage->getSignature()->getVrfOutput());
+        $this->assertTrue($deviceTwoMessage->getSignature()->getVrfOutput()===$receivedDeviceTwoMessage->getSignature()->getVrfOutput());
+        $this->assertTrue($deviceThreeMessage->getSignature()->getVrfOutput()===$receivedDeviceThreeMessage->getSignature()->getVrfOutput());
 
         $codeOne = self::generateCode($deviceOneCommitment,$deviceOneMessage,$receivedDeviceTwoMessage,$receivedDeviceThreeMessage);
         $codeTwo = self::generateCode($deviceTwoCommitment,$deviceTwoMessage,$receivedDeviceThreeMessage,$receivedDeviceOneMessage);

@@ -146,6 +146,8 @@ class Curve25519Test extends TestCase{
                 throw new AssertionError("Sig verification succeeded!");
             }
         }
+
+        $this->assertTrue(true);
     }
 
     /**

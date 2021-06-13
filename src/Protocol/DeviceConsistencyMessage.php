@@ -32,6 +32,7 @@ class DeviceConsistencyMessage{
      * @param IdentityKeyPair|string $identityKeyPairOrSerialized
      * @param IdentityKey|null $identityKeyOrNull
      * @throws InvalidMessageException
+     * @throws \Exception
      */
     public function __construct(DeviceConsistencyCommitment $commitment,$identityKeyPairOrSerialized,$identityKeyOrNull=null){
         if($identityKeyPairOrSerialized instanceof IdentityKeyPair && $identityKeyOrNull==null){
@@ -49,11 +50,12 @@ class DeviceConsistencyMessage{
             }catch(InvalidKeyException $e){
                 throw new AssertionError($e);
             }
-        }elseif(is_string($identityKeyPairOrSerialized) instanceof IdentityKeyPair && $identityKeyOrNull instanceof IdentityKey){
+        }elseif(is_string($identityKeyPairOrSerialized) && $identityKeyOrNull instanceof IdentityKey){
             try{
                 $serialized = $identityKeyPairOrSerialized;
                 $identityKey = $identityKeyOrNull;
-                $message = new DeviceConsistencyCodeMessage($serialized);
+                $message = new DeviceConsistencyCodeMessage;
+                $message->mergeFromString($serialized);
                 $vrfOutputBytes = Curve::verifyVrfSignature($identityKey->getPublicKey(),$commitment->toByteArray(),$message->getSignature());
 
                 $this->generation = $message->getGeneration();
