@@ -44,9 +44,9 @@ class DeviceConsistencyMessage{
                 $this->signature  = new DeviceConsistencySignature($signatureBytes,$vrfOutputBytes);
                 $this->serialized = (new DeviceConsistencyCodeMessage)
                     ->setGeneration($commitment->getGeneration())
-                    ->setSignature($this->signature)
+                    ->setSignature($this->signature->getSignature())
                     ->serializeToString();
-            }catch(InvalidKeyException $e) {
+            }catch(InvalidKeyException $e){
                 throw new AssertionError($e);
             }
         }elseif(is_string($identityKeyPairOrSerialized) instanceof IdentityKeyPair && $identityKeyOrNull instanceof IdentityKey){

@@ -140,7 +140,7 @@ class Curve{
 
         if($signingKey->getType()===self::DJB_TYPE){
             /**@var DjbECPrivateKey $signingKey*/
-            return '';//TODO
+            return str_repeat("\0",32);//TODO
         } else {
             throw new InvalidKeyException("Unknown type: " . $signingKey->getType());
         }
@@ -159,7 +159,7 @@ class Curve{
         }
         if($signingKey->getType()==self::DJB_TYPE){
             /**@var DjbECPublicKey $signingKey*/
-            return '';//TODO
+            return str_repeat("\0",32);//TODO
         }else{
             throw new InvalidKeyException("Unknown type: " . $signingKey->getType());
         }
