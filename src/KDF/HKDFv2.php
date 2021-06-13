@@ -1,9 +1,9 @@
 <?php
 namespace WhisperSystems\LibSignal\KDF;
 
-class HKDFv2{
+class HKDFv2 extends HKDF{
 
-    public function getIterationStartOffset(){
+    public function getIterationStartOffset(): int{
         return 0;
     }
 

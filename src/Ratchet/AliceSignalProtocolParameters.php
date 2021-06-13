@@ -79,7 +79,7 @@ class AliceSignalProtocolParameters{
         return $this->theirOneTimePreKey;
     }
 
-    public function newBuilder(): AliceSignalProtocolParameters_Builder{
+    public static function newBuilder(): AliceSignalProtocolParameters_Builder{
         return new AliceSignalProtocolParameters_Builder();
     }
 
