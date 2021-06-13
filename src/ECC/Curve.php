@@ -1,6 +1,7 @@
 <?php
 namespace WhisperSystems\LibSignal\ECC;
 
+use Curve25519\Curve25519;
 use WhisperSystems\LibSignal\InvalidKeyException;
 
 class Curve{
@@ -12,10 +13,14 @@ class Curve{
     }
 
     public static function generateKeyPair(): ECKeyPair{
-        $keyPair = null;//TODO
+        //TODO Improve
+        $tmpPriv = random_bytes(32);
+        $tmpPub = (new Curve25519)->publicKey($tmpPriv);
 
-        return new ECKeyPair(new DjbECPublicKey($keyPair->getPublicKey()),
-            new DjbECPrivateKey($keyPair->getPrivateKey()));
+        return new ECKeyPair(new DjbECPublicKey($tmpPub),new DjbECPrivateKey($tmpPriv));
+
+//        return new ECKeyPair(new DjbECPublicKey($keyPair->getPublicKey()),
+//            new DjbECPrivateKey($keyPair->getPrivateKey()));
     }
 
     /**
@@ -29,7 +34,7 @@ class Curve{
             throw new InvalidKeyException("No key type identifier");
         }
 
-        $type = $bytes[$offset] & 0xFF;
+        $type = ord($bytes[$offset]) & 0xFF;
 
         switch($type){
             case self::DJB_TYPE:
@@ -68,9 +73,35 @@ class Curve{
         }
 
         if($publicKey->getType()===self::DJB_TYPE){
-            return null;//TODO
+            /**@var DjbECPublicKey $publicKey*/
+            /**@var DjbECPrivateKey $privateKey*/
+            //TODO Improve
+            return (new Curve25519)->sharedKey($privateKey->getPrivateKey(),$publicKey->getPublicKey());
         }else{
             throw new InvalidKeyException("Unknown type: " . $publicKey->getType());
+        }
+    }
+
+    /**
+     * @param ECPublicKey $signingKey
+     * @param string $message
+     * @param string $signature
+     * @return bool
+     * @throws InvalidKeyException
+     */
+    public static function verifySignature(ECPublicKey $signingKey,string $message,string $signature): bool{
+        if($signingKey===null || $message===null || $signature===null){
+            throw new InvalidKeyException("Values must not be null");
+        }
+
+        if($signingKey->getType()==self::DJB_TYPE){
+            //TODO Improve
+            /**@var DjbECPublicKey $signingKey*/
+            return (new \deemru\Curve25519)->verify($signature,$message,$signingKey->getPublicKey());
+//            return Curve25519.getInstance(BEST)
+//                .verifySignature(((DjbECPublicKey) signingKey).getPublicKey(), message, signature);
+        }else{
+            throw new InvalidKeyException("Unknown type: " . $signingKey->getType());
         }
     }
 

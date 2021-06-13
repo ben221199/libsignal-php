@@ -13,7 +13,7 @@ class DjbECPublicKey implements ECPublicKey{
     }
 
     public function serialize(): string{
-        $type = (string) decbin(Curve::DJB_TYPE);
+        $type = chr(Curve::DJB_TYPE);
         return $type.$this->publicKey;
     }
 

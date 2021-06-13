@@ -1,12 +1,14 @@
 <?php
 namespace WhisperSystems\LibSignal\ECC;
 
+use AssertionError;
 use PHPUnit\Framework\TestCase;
 use WhisperSystems\LibSignal\InvalidKeyException;
 
 class Curve25519Test extends TestCase{
 
     /**
+     * @covers Curve
      * @throws InvalidKeyException
      */
     public function testAgreement(): void{
@@ -58,6 +60,136 @@ class Curve25519Test extends TestCase{
 
         $this->assertTrue($sharedOne===$shared);
         $this->assertTrue($sharedTwo===$shared);
+    }
+
+    /**
+     * @covers Curve
+     * @throws InvalidKeyException
+     */
+    public function testRandomAgreements(): void{
+        for($i=0;$i<50;$i++){
+            $alice = Curve::generateKeyPair();
+            $bob = Curve::generateKeyPair();
+
+            $sharedAlice = Curve::calculateAgreement($bob->getPublicKey(),$alice->getPrivateKey());
+            $sharedBob = Curve::calculateAgreement($alice->getPublicKey(),$bob->getPrivateKey());
+
+            $this->assertTrue($sharedAlice===$sharedBob);
+        }
+    }
+
+    /**
+     * @covers Curve
+     * @throws InvalidKeyException
+     */
+    public function testSignature(): void{
+        $aliceIdentityPrivate = implode([
+            "\xc0", "\x97", "\x24", "\x84", "\x12",
+            "\xe5", "\x8b", "\xf0", "\x5d", "\xf4",
+            "\x87", "\x96", "\x82", "\x05", "\x13",
+            "\x27", "\x94", "\x17", "\x8e", "\x36",
+            "\x76", "\x37", "\xf5", "\x81", "\x8f",
+            "\x81", "\xe0", "\xe6", "\xce", "\x73",
+            "\xe8", "\x65",
+        ]);
+
+        $aliceIdentityPublic  = implode([
+            "\x05", "\xab", "\x7e", "\x71", "\x7d",
+            "\x4a", "\x16", "\x3b", "\x7d", "\x9a",
+            "\x1d", "\x80", "\x71", "\xdf", "\xe9",
+            "\xdc", "\xf8", "\xcd", "\xcd", "\x1c",
+            "\xea", "\x33", "\x39", "\xb6", "\x35",
+            "\x6b", "\xe8", "\x4d", "\x88", "\x7e",
+            "\x32", "\x2c", "\x64",
+        ]);
+
+        $aliceEphemeralPublic = implode([
+            "\x05", "\xed", "\xce", "\x9d", "\x9c",
+            "\x41", "\x5c", "\xa7", "\x8c", "\xb7",
+            "\x25", "\x2e", "\x72", "\xc2", "\xc4",
+            "\xa5", "\x54", "\xd3", "\xeb", "\x29",
+            "\x48", "\x5a", "\x0e", "\x1d", "\x50",
+            "\x31", "\x18", "\xd1", "\xa8", "\x2d",
+            "\x99", "\xfb", "\x4a",
+        ]);
+
+        $aliceSignature = implode([
+            "\x5d", "\xe8", "\x8c", "\xa9", "\xa8",
+            "\x9b", "\x4a", "\x11", "\x5d", "\xa7",
+            "\x91", "\x09", "\xc6", "\x7c", "\x9c",
+            "\x74", "\x64", "\xa3", "\xe4", "\x18",
+            "\x02", "\x74", "\xf1", "\xcb", "\x8c",
+            "\x63", "\xc2", "\x98", "\x4e", "\x28",
+            "\x6d", "\xfb", "\xed", "\xe8", "\x2d",
+            "\xeb", "\x9d", "\xcd", "\x9f", "\xae",
+            "\x0b", "\xfb", "\xb8", "\x21", "\x56",
+            "\x9b", "\x3d", "\x90", "\x01", "\xbd",
+            "\x81", "\x30", "\xcd", "\x11", "\xd4",
+            "\x86", "\xce", "\xf0", "\x47", "\xbd",
+            "\x60", "\xb8", "\x6e", "\x88"
+        ]);
+
+        $alicePrivateKey = Curve::decodePrivatePoint($aliceIdentityPrivate);
+        $alicePublicKey = Curve::decodePoint($aliceIdentityPublic,0);
+        $aliceEphemeral = Curve::decodePoint($aliceEphemeralPublic,0);
+
+        if(!Curve::verifySignature($alicePublicKey,$aliceEphemeral->serialize(),$aliceSignature)){
+            throw new AssertionError("Sig verification failed!");
+        }
+
+        for($i=0;$i<strlen($aliceSignature);$i++){
+            $modifiedSignature = $aliceSignature;
+
+            $modifiedSignature[$i] = chr(ord($modifiedSignature[$i]) ^ 0x01);
+
+            if (Curve::verifySignature($alicePublicKey,$aliceEphemeral->serialize(),$modifiedSignature)){
+                throw new AssertionError("Sig verification succeeded!");
+            }
+        }
+    }
+
+    /**
+     * @covers Curve
+     * @throws InvalidKeyException
+     */
+    public function testDecodeSize(): void{
+        $keyPair = Curve::generateKeyPair();
+        $serializedPublic = $keyPair->getPublicKey()->serialize();
+
+        $justRight = Curve::decodePoint($serializedPublic,0);
+
+        try{
+            $tooSmall = Curve::decodePoint($serializedPublic,1);
+            throw new AssertionError("Shouldn't decode");
+        }catch(InvalidKeyException $e){
+            // good
+        }
+
+        try{
+            $empty = Curve::decodePoint('',0);
+            throw new AssertionError("Shouldn't parse");
+        }catch(InvalidKeyException $e){
+            // good
+        }
+
+        try{
+            $badKeyType = $serializedPublic;
+            $badKeyType[0] = 0x01;
+            Curve::decodePoint($badKeyType,0);
+            throw new AssertionError("Should be bad key type");
+        }catch(InvalidKeyException $e){
+            // good
+        }
+
+        $extraSpace = $serializedPublic."\x00";
+        $extra = Curve::decodePoint($extraSpace,0);
+
+        $offsetSpace = "\x00".$serializedPublic;
+        $offset = Curve::decodePoint($offsetSpace,1);
+
+        $this->assertTrue($serializedPublic===$justRight->serialize());
+        $this->assertTrue($extra->serialize()===$serializedPublic);
+        $this->assertTrue($offset->serialize()===$serializedPublic);
     }
 
 }
