@@ -2,7 +2,7 @@
 namespace WhisperSystems\LibSignal\KDF;
 
 use AssertionError;
-use Libsignal\exceptions\InvalidKeyException;
+use WhisperSystems\LibSignal\InvalidKeyException;
 
 abstract class HKDF{
 
@@ -12,7 +12,7 @@ abstract class HKDF{
      * @param int $messageVersion
      * @return HKDFv2|HKDFv3
      */
-    public function createFor(int $messageVersion){
+    public static function createFor(int $messageVersion){
         switch($messageVersion){
             case 2:
                 return new HKDFv2();
@@ -43,29 +43,27 @@ abstract class HKDF{
             $iterations = (int) ceil($outputSize / self::HASH_OUTPUT_SIZE);
             $mixin = '';
             $results = '';
-            //int                   remainingBytes = outputSize;
+            $remainingBytes = $outputSize;
+
             for($i=$this->getIterationStartOffset();$i<$iterations+$this->getIterationStartOffset();$i++){
-//                hash_hmac()
-//                Mac mac = Mac.getInstance("HmacSHA256");
-//                mac.init(new SecretKeySpec(prk, "HmacSHA256"));
-//
-//                mac.update(mixin);
-//                if (info != null) {
-//                    mac.update(info);
-//                }
-//                mac.update((byte)i);
-//
-//                byte[] stepResult = mac.doFinal();
-//                int    stepSize   = Math.min(remainingBytes, stepResult.length);
-//
-//                results.write(stepResult, 0, stepSize);
-//
-//                mixin          = stepResult;
-//                remainingBytes -= stepSize;
+                $data = '';
+                $data .= $mixin;
+                if($info!==null){
+                    $data .= $info;
+                }
+                $data .= chr($i);
+
+                $stepResult = hash_hmac('sha256',$data,$prk,true);
+                $stepSize = min($remainingBytes,strlen($stepResult));
+
+                $results .= substr($stepResult,0,$stepSize);
+
+                $mixin = $stepResult;
+                $remainingBytes -= $stepSize;
             }
 
             return $results;
-        }catch(NoSuchAlgorithmException | InvalidKeyException $e){
+        }catch(InvalidKeyException $e){
             throw new AssertionError($e);
         }
   }
