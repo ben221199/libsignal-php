@@ -3,6 +3,16 @@ namespace WhisperSystems\LibSignal\Util;
 
 class ByteUtil{
 
+    public static function combine(string ...$elements): string{
+        $baos = '';
+
+        foreach($elements AS $element){
+            $baos .= $element;
+        }
+
+        return $baos;
+    }
+
     /**
      * @param string $input
      * @param int $firstLength
@@ -19,6 +29,10 @@ class ByteUtil{
             $parts[] = substr($input,$firstLength+$secondLength,$thirdLength);
         }
         return $parts;
+    }
+
+    public static function trim(string $input,int $length): string{
+        return substr($input,0,$length);
     }
 
     public static function shortToByteArray(int $value): string{

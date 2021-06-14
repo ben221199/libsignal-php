@@ -6,7 +6,6 @@ use Exception;
 class Absent extends Optional{
 
     static $INSTANCE;
-
     static function INSTANCE(){
         if(!static::$INSTANCE){
             static::$INSTANCE = new Absent();

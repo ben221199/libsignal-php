@@ -39,7 +39,7 @@ class DeviceConsistencyCommitment{
             }
 
             $this->generation = $generation;
-            $this->serialized = hash('sha512',$data);
+            $this->serialized = hash('sha512',$data,true);
         }catch(Exception $e){
             throw new AssertionError($e);
         }

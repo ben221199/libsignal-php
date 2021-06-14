@@ -27,7 +27,7 @@ class DeviceConsistencyCodeGenerator{
                 $data .= $signature->getVrfOutput();
             }
 
-            $hash = hash('sha512',$data);
+            $hash = hash('sha512',$data,true);
 
             $digits = self::getEncodedChunk($hash,0) . self::getEncodedChunk($hash,5);
             return substr($digits,0,6);
