@@ -76,7 +76,7 @@ class Present extends Optional{
         return false;
     }
 
-    public function toString(): string{
+    public function __toString(): string{
         return "Optional.of(" . $this->reference . ")";
     }
 

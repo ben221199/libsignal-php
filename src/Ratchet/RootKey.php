@@ -7,6 +7,7 @@ use WhisperSystems\LibSignal\ECC\ECPublicKey;
 use WhisperSystems\LibSignal\InvalidKeyException;
 use WhisperSystems\LibSignal\KDF\DerivedRootSecrets;
 use WhisperSystems\LibSignal\KDF\HKDF;
+use WhisperSystems\LibSignal\Util\Pair;
 
 class RootKey{
 

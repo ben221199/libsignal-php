@@ -2,8 +2,11 @@
 namespace WhisperSystems\LibSignal\State;
 
 use AssertionError;
+use Exception;
 use WhisperSystems\LibSignal\ECC\Curve;
 use WhisperSystems\LibSignal\ECC\ECKeyPair;
+use WhisperSystems\LibSignal\InvalidKeyException;
+use WhisperSystems\LibSignal\State\StorageProtos\SignedPreKeyRecordStructure;
 
 class SignedPreKeyRecord{
 
@@ -14,11 +17,23 @@ class SignedPreKeyRecord{
 
     /**
      * SignedPreKeyRecord constructor.
-     * @param string $serialized
-     * @throws IOException
+     * @param string|int $serializedOrId
+     * @param int $timestamp
+     * @param ECKeyPair $keyPair
+     * @param string $signature
      */
-    public function __construct(string $serialized){
-        $this->structure = SignedPreKeyRecordStructure::parseFrom($serialized);
+    public function __construct($serializedOrId,$timestamp=null,$keyPair=null,$signature=null){
+        if(is_string($serializedOrId) && $timestamp===null && $keyPair===null && $signature===null){
+            $this->structure = new SignedPreKeyRecordStructure;
+            $this->structure->mergeFrom($serializedOrId);
+        }elseif(is_int($serializedOrId) && is_int($timestamp) && $keyPair instanceof ECKeyPair && is_string($signature)){
+            $this->structure = (new SignedPreKeyRecordStructure)
+                ->setId($serializedOrId)
+                ->setPublicKey($keyPair->getPublicKey()->serialize())
+                ->setPrivateKey($keyPair->getPrivateKey()->serialize())
+                ->setSignature($signature)
+                ->setTimestamp($timestamp);
+        }
     }
 
     public function getId(): int{
@@ -31,8 +46,8 @@ class SignedPreKeyRecord{
 
     public function getKeyPair(): ECKeyPair{
         try{
-            $publicKey = Curve::decodePoint($this->structure->getPublicKey()->toByteArray(),0);
-            $privateKey = Curve::decodePrivatePoint($this->structure->getPrivateKey()->toByteArray());
+            $publicKey = Curve::decodePoint($this->structure->getPublicKey(),0);
+            $privateKey = Curve::decodePrivatePoint($this->structure->getPrivateKey());
 
             return new ECKeyPair($publicKey,$privateKey);
         }catch (InvalidKeyException $e){
@@ -41,11 +56,11 @@ class SignedPreKeyRecord{
     }
 
     public function getSignature(): string{
-        return $this->structure->getSignature()->toByteArray();
+        return $this->structure->getSignature();
     }
 
     public function serialize(): string{
-        return $this->structure->toByteArray();
+        return $this->structure->serializeToString();
     }
 
 }

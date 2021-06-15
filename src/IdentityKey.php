@@ -3,6 +3,7 @@ namespace WhisperSystems\LibSignal;
 
 use WhisperSystems\LibSignal\ECC\Curve;
 use WhisperSystems\LibSignal\ECC\ECPublicKey;
+use WhisperSystems\LibSignal\Util\Hex;
 
 class IdentityKey{
 
@@ -36,15 +37,15 @@ class IdentityKey{
         return Hex::toString($this->publicKey->serialize());
     }
 
-public function equals($other): bool{
-    if($other===null){
-        return false;
+    public function equals($other): bool{
+        if($other===null){
+            return false;
+        }
+        if(!($other instanceof IdentityKey)){
+            return false;
+        }
+        /**@var IdentityKey $other*/
+        return $this->publicKey->equals($other->getPublicKey());
     }
-    if(!($other instanceof IdentityKey)){
-        return false;
-    }
-    /**@var IdentityKey $other*/
-    return $this->publicKey->equals($other->getPublicKey());
-}
 
 }

@@ -3,7 +3,7 @@ namespace WhisperSystems\LibSignal\State\Impl;
 
 use AssertionError;
 use Exception;
-use Libsignal\exceptions\InvalidKeyIdException;
+use WhisperSystems\LibSignal\InvalidKeyIdException;
 use WhisperSystems\LibSignal\State\SignedPreKeyRecord;
 use WhisperSystems\LibSignal\State\SignedPreKeyStore;
 

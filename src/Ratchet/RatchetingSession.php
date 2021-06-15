@@ -4,6 +4,7 @@ namespace WhisperSystems\LibSignal\Ratchet;
 use AssertionError;
 use Exception;
 use WhisperSystems\LibSignal\ECC\Curve;
+use WhisperSystems\LibSignal\ECC\DjbECPublicKey;
 use WhisperSystems\LibSignal\ECC\ECPublicKey;
 use WhisperSystems\LibSignal\KDF\HKDFv3;
 use WhisperSystems\LibSignal\Protocol\CiphertextMessage;
@@ -118,6 +119,7 @@ class RatchetingSession{
     }
 
     private static function isAlice(ECPublicKey $ourKey,ECPublicKey $theirKey): bool{
+        /**@var DjbECPublicKey $ourKey*/
         return $ourKey->compareTo($theirKey) < 0;
     }
 

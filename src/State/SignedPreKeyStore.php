@@ -1,7 +1,7 @@
 <?php
 namespace WhisperSystems\LibSignal\State;
 
-use Libsignal\exceptions\InvalidKeyIdException;
+use WhisperSystems\LibSignal\InvalidKeyIdException;
 
 interface SignedPreKeyStore{
 

@@ -1,6 +1,10 @@
 <?php
 namespace WhisperSystems\LibSignal\State;
 
+use WhisperSystems\LibSignal\IdentityKey;
+use WhisperSystems\LibSignal\IdentityKeyPair;
+use WhisperSystems\LibSignal\SignalProtocolAddress;
+
 interface IdentityKeyStore{
 
     /**

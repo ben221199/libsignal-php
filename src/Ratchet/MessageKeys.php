@@ -4,15 +4,15 @@ namespace WhisperSystems\LibSignal\Ratchet;
 class MessageKeys{
 
     /**
-     * @var SecretKeySpec $cipherKey
+     * @var string $cipherKey
      */
     private $cipherKey;
     /**
-     * @var SecretKeySpec $macKey
+     * @var string $macKey
      */
     private $macKey;
     /**
-     * @var IvParameterSpec $iv
+     * @var string $iv
      */
     private $iv;
     /**
@@ -20,22 +20,22 @@ class MessageKeys{
      */
     private $counter;
 
-    public function __construct(SecretKeySpec $cipherKey,SecretKeySpec $macKey,IvParameterSpec $iv,int $counter){
+    public function __construct(string $cipherKey,string $macKey,string $iv,int $counter){
         $this->cipherKey = $cipherKey;
         $this->macKey = $macKey;
         $this->iv = $iv;
         $this->counter = $counter;
     }
 
-    public function getCipherKey(): SecretKeySpec{
+    public function getCipherKey(): string{
         return $this->cipherKey;
     }
 
-    public function getMacKey(): SecretKeySpec{
+    public function getMacKey(): string{
         return $this->macKey;
     }
 
-    public function getIv(): IvParameterSpec{
+    public function getIv(): string{
         return $this->iv;
     }
 

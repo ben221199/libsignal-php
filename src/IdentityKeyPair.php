@@ -2,9 +2,9 @@
 namespace WhisperSystems\LibSignal;
 
 use Exception;
-use Localstorage\IdentityKeyPairStructure;
 use WhisperSystems\LibSignal\ECC\Curve;
 use WhisperSystems\LibSignal\ECC\ECPrivateKey;
+use WhisperSystems\LibSignal\State\StorageProtos\IdentityKeyPairStructure;
 
 class IdentityKeyPair{
 
@@ -29,9 +29,10 @@ class IdentityKeyPair{
             $this->privateKey = $privateKeyOrNull;
         }elseif(is_string($publicKeyOrSerialized) && $privateKeyOrNull===null){
             try{
-                $structure = IdentityKeyPairStructure::parseFrom($publicKeyOrSerialized);
-                $this->publicKey  = new IdentityKey($structure->getPublicKey()->toByteArray(),0);
-                $this->privateKey = Curve::decodePrivatePoint($structure->getPrivateKey()->toByteArray());
+                $structure = new IdentityKeyPairStructure;
+                $structure->mergeFrom($publicKeyOrSerialized);
+                $this->publicKey  = new IdentityKey($structure->getPublicKey(),0);
+                $this->privateKey = Curve::decodePrivatePoint($structure->getPrivateKey());
             }catch(Exception $e){
                 throw new InvalidKeyException($e);
             }
