@@ -7,6 +7,7 @@ use WhisperSystems\LibSignal\ECC\Curve;
 use WhisperSystems\LibSignal\ECC\ECKeyPair;
 use WhisperSystems\LibSignal\IdentityKey;
 use WhisperSystems\LibSignal\IdentityKeyPair;
+use WhisperSystems\LibSignal\InvalidKeyException;
 use WhisperSystems\LibSignal\State\PreKeyRecord;
 use WhisperSystems\LibSignal\State\SignedPreKeyRecord;
 
@@ -14,6 +15,10 @@ class KeyHelper{
 
     private function __construct(){}
 
+    /**
+     * @return IdentityKeyPair
+     * @throws InvalidKeyException
+     */
     public static function generateIdentityKeyPair(): IdentityKeyPair{
         $keyPair = Curve::generateKeyPair();
         $publicKey = new IdentityKey($keyPair->getPublicKey());
@@ -66,7 +71,7 @@ class KeyHelper{
         $keyPair = Curve::generateKeyPair();
         $signature = Curve::calculateSignature($identityKeyPair->getPrivateKey(),$keyPair->getPublicKey()->serialize());
 
-        return new SignedPreKeyRecord($signedPreKeyId,round(microtime(true)*1000),$keyPair,$signature);
+        return new SignedPreKeyRecord($signedPreKeyId,(int) round(microtime(true)*1000),$keyPair,$signature);
     }
 
     public static function generateSenderSigningKey(): ECKeyPair{
