@@ -18,6 +18,9 @@ class SessionCipherTest extends TestCase{
 
     //throws InvalidKeyException, DuplicateMessageException,
     //LegacyMessageException, InvalidMessageException, NoSuchAlgorithmException, NoSessionException, UntrustedIdentityException
+    /**
+     * @throws InvalidKeyException
+     */
     public function testBasicSessionV3(): void{
         $aliceSessionRecord = new SessionRecord();
         $bobSessionRecord = new SessionRecord();
@@ -30,6 +33,7 @@ class SessionCipherTest extends TestCase{
 
     /**
      * @throws InvalidKeyException
+     * @throws UntrustedIdentityException
      */
     public function testMessageKeyLimits(): void{
         $aliceSessionRecord = new SessionRecord();

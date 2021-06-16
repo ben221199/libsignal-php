@@ -34,10 +34,10 @@ class InMemoryIdentityKeyStore implements IdentityKeyStore{
     }
 
     public function saveIdentity(SignalProtocolAddress $address,IdentityKey $identityKey): bool{
-        $existing = $this->trustedKeys[$address->getDeviceId()];
+        $existing = $this->trustedKeys[$address->getName()] ?? null;
 
         if(!$identityKey->equals($existing)){
-            $trustedKeys[$address->getDeviceId()] = $identityKey;
+            $trustedKeys[$address->getName()] = $identityKey;
             return true;
         }else{
             return false;
@@ -45,12 +45,12 @@ class InMemoryIdentityKeyStore implements IdentityKeyStore{
     }
 
     public function isTrustedIdentity(SignalProtocolAddress $address,IdentityKey $identityKey,IdentityKeyStore_Direction $direction): bool{
-        $trusted = $this->trustedKeys[$address->getDeviceId()];
+        $trusted = $this->trustedKeys[$address->getName()] ?? null;
         return ($trusted===null || $trusted->equals($identityKey));
     }
 
     public function getIdentity(SignalProtocolAddress $address): IdentityKey{
-        return $this->trustedKeys[$address->getDeviceId()];
+        return $this->trustedKeys[$address->getName()];
     }
 
 }

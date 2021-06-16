@@ -8,9 +8,10 @@ use WhisperSystems\LibSignal\SignalProtocolAddress;
 use WhisperSystems\LibSignal\State\IdentityKeyStore_Direction;
 use WhisperSystems\LibSignal\State\PreKeyRecord;
 use WhisperSystems\LibSignal\State\SessionRecord;
+use WhisperSystems\LibSignal\State\SignalProtocolStore;
 use WhisperSystems\LibSignal\State\SignedPreKeyRecord;
 
-class InMemorySignalProtocolStore{
+class InMemorySignalProtocolStore implements SignalProtocolStore{
 
     /**
      * @var InMemoryPreKeyStore $preKeyStore
@@ -31,6 +32,10 @@ class InMemorySignalProtocolStore{
     private $identityKeyStore;
 
     public function __construct(IdentityKeyPair $identityKeyPair,int $registrationId){
+        $this->preKeyStore = new InMemoryPreKeyStore;
+        $this->sessionStore = new InMemorySessionStore;
+        $this->signedPreKeyStore = new InMemorySignedPreKeyStore;
+
         $this->identityKeyStore = new InMemoryIdentityKeyStore($identityKeyPair,$registrationId);
     }
 

@@ -1,6 +1,7 @@
 <?php
 namespace WhisperSystems\LibSignal\State;
 
+use Exception;
 use WhisperSystems\LibSignal\State\StorageProtos\RecordStructure;
 
 class SessionRecord{
@@ -20,6 +21,11 @@ class SessionRecord{
      */
     private $fresh = false;
 
+    /**
+     * SessionRecord constructor.
+     * @param string|null $sessionStateOrSerialized
+     * @throws Exception
+     */
     public function __construct($sessionStateOrSerialized=null){
         if($sessionStateOrSerialized===null){
             $this->sessionState = new SessionState;
@@ -29,7 +35,7 @@ class SessionRecord{
             $this->fresh = false;
         }elseif(is_string($sessionStateOrSerialized)){
             $record = new RecordStructure;
-            $record->mergeFrom($sessionStateOrSerialized);
+            $record->mergeFromString($sessionStateOrSerialized);
             $this->sessionState = new SessionState($record->getCurrentSession());
             $this->fresh = false;
 

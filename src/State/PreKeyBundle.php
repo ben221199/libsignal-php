@@ -85,7 +85,7 @@ class PreKeyBundle{
     /**
      * @return ECPublicKey the signed prekey for this PreKeyBundle.
      */
-    public function getSignedPreKey(): ECPublicKey{
+    public function getSignedPreKey(): ?ECPublicKey{
         return $this->signedPreKeyPublic;
     }
 

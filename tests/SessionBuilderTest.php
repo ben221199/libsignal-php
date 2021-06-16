@@ -29,10 +29,10 @@ class SessionBuilderTest extends TestCase{
         return static::$BOB_ADDRESS;
     }
 
-    //throws InvalidKeyException, InvalidVersionException, InvalidMessageException, InvalidKeyIdException, DuplicateMessageException, LegacyMessageException, UntrustedIdentityException, NoSessionException
-
     /**
+     * @covers SessionBuilder
      * @throws InvalidKeyException
+     * @throws UntrustedIdentityException
      */
     public function testBasicPreKeyV2(): void{
         $aliceStore = new TestInMemorySignalProtocolStore();
@@ -47,6 +47,7 @@ class SessionBuilderTest extends TestCase{
             throw new AssertionError("Should fail with missing unsigned prekey!");
         }catch(InvalidKeyException $e){
             // Good!
+            $this->assertTrue(true);
             return;
         }
     }
