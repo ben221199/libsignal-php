@@ -2,6 +2,7 @@
 namespace WhisperSystems\LibSignal\Protocol;
 
 use AssertionError;
+use RuntimeException;
 use WhisperSystems\LibSignal\Devices\DeviceConsistencyCommitment;
 use WhisperSystems\LibSignal\Devices\DeviceConsistencySignature;
 use WhisperSystems\LibSignal\ECC\Curve;
@@ -64,6 +65,8 @@ class DeviceConsistencyMessage{
             }catch (InvalidKeyException $e) {
                 throw new InvalidMessageException($e);
             }
+        }else{
+            throw new RuntimeException('Invalid constructor call');
         }
     }
 

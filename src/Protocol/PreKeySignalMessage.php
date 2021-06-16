@@ -2,6 +2,7 @@
 namespace WhisperSystems\LibSignal\Protocol;
 
 use Exception;
+use RuntimeException;
 use WhisperSystems\LibSignal\ECC\Curve;
 use WhisperSystems\LibSignal\ECC\ECPublicKey;
 use WhisperSystems\LibSignal\IdentityKey;
@@ -113,6 +114,8 @@ class PreKeySignalMessage implements CiphertextMessage{
             $messageBytes = $builder->serializeToString();
 
             $this->serialized = ByteUtil::combine($versionBytes,$messageBytes);
+        }else{
+            throw new RuntimeException('Invalid constructor call');
         }
     }
 

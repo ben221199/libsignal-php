@@ -3,6 +3,7 @@ namespace WhisperSystems\LibSignal\Protocol;
 
 use AssertionError;
 use Exception;
+use RuntimeException;
 use WhisperSystems\LibSignal\ECC\Curve;
 use WhisperSystems\LibSignal\ECC\ECPrivateKey;
 use WhisperSystems\LibSignal\ECC\ECPublicKey;
@@ -90,6 +91,8 @@ class SenderKeyMessage implements CiphertextMessage{
             $this->keyId = $serializedOrKeyId;
             $this->iteration = $iterationOrNull;
             $this->ciphertext = $ciphertextOrNull;
+        }else{
+            throw new RuntimeException('Invalid constructor call');
         }
     }
 

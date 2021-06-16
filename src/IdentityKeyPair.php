@@ -2,6 +2,7 @@
 namespace WhisperSystems\LibSignal;
 
 use Exception;
+use RuntimeException;
 use WhisperSystems\LibSignal\ECC\Curve;
 use WhisperSystems\LibSignal\ECC\ECPrivateKey;
 use WhisperSystems\LibSignal\State\StorageProtos\IdentityKeyPairStructure;
@@ -36,6 +37,8 @@ class IdentityKeyPair{
             }catch(Exception $e){
                 throw new InvalidKeyException($e);
             }
+        }else{
+            throw new RuntimeException('Invalid constructor call');
         }
     }
 

@@ -58,6 +58,8 @@ class SessionCipher{
             $this->identityKeyStore = $identityKeyStoreOrNull;
             $this->remoteAddress = $remoteAddressOrNull;
             $this->sessionBuilder = new SessionBuilder($storeOrSessionStore,$remoteAddressOrPreKeyStore,$signedPreKeyStoreOrNull,$identityKeyStoreOrNull,$remoteAddressOrNull);
+        }else{
+            throw new RuntimeException('Invalid constructor call');
         }
     }
 

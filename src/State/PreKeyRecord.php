@@ -2,6 +2,7 @@
 namespace WhisperSystems\LibSignal\State;
 
 use AssertionError;
+use RuntimeException;
 use WhisperSystems\LibSignal\ECC\Curve;
 use WhisperSystems\LibSignal\ECC\ECKeyPair;
 use WhisperSystems\LibSignal\InvalidKeyException;
@@ -23,6 +24,8 @@ class PreKeyRecord{
         }elseif(is_string($idOrSerialized) && $keyPairOrNull===null){
             $this->structure = new PreKeyRecordStructure;
             $this->structure->mergeFrom($idOrSerialized);
+        }else{
+            throw new RuntimeException('Invalid constructor call');
         }
     }
 

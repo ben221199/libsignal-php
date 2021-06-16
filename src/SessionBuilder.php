@@ -60,6 +60,8 @@ class SessionBuilder{
             $this->signedPreKeyStore = $signedPreKeyStoreOrNull;
             $this->identityKeyStore = $identityKeyStoreOrNull;
             $this->remoteAddress= $remoteAddressOrNull;
+        }else{
+            throw new RuntimeException('Invalid constructor call');
         }
     }
 
