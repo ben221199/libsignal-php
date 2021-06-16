@@ -3,6 +3,7 @@ namespace WhisperSystems\LibSignal\State;
 
 use AssertionError;
 use Exception;
+use RuntimeException;
 use WhisperSystems\LibSignal\ECC\Curve;
 use WhisperSystems\LibSignal\ECC\DjbECPublicKey;
 use WhisperSystems\LibSignal\ECC\ECKeyPair;
@@ -42,6 +43,8 @@ class SessionState{
         }elseif($sessionStructureOrCopy instanceof SessionState){
             $this->sessionStructure = new SessionStructure;
             $this->sessionStructure->mergeFrom($sessionStructureOrCopy->sessionStructure);
+        }else{
+            throw new RuntimeException('Invalid constructor call');
         }
     }
 

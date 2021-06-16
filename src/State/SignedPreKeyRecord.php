@@ -3,6 +3,7 @@ namespace WhisperSystems\LibSignal\State;
 
 use AssertionError;
 use Exception;
+use RuntimeException;
 use WhisperSystems\LibSignal\ECC\Curve;
 use WhisperSystems\LibSignal\ECC\ECKeyPair;
 use WhisperSystems\LibSignal\InvalidKeyException;
@@ -33,6 +34,8 @@ class SignedPreKeyRecord{
                 ->setPrivateKey($keyPair->getPrivateKey()->serialize())
                 ->setSignature($signature)
                 ->setTimestamp($timestamp);
+        }else{
+            throw new RuntimeException('Invalid constructor call');
         }
     }
 

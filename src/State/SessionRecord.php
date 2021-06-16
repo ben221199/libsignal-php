@@ -2,6 +2,7 @@
 namespace WhisperSystems\LibSignal\State;
 
 use Exception;
+use RuntimeException;
 use WhisperSystems\LibSignal\State\StorageProtos\RecordStructure;
 
 class SessionRecord{
@@ -42,6 +43,8 @@ class SessionRecord{
             foreach($record->getPreviousSessions() AS $previousStructure){
                 $this->previousStates[] = new SessionState($previousStructure);
             }
+        }else{
+            throw new RuntimeException('Invalid constructor call');
         }
     }
 
